@@ -20,7 +20,7 @@ class founder{
        rect.w=0;
        rect.h=0;
    };
-   void setRect(int& x,int& y){rect.x=x;rect.y=y;};
+   void setRect(double x,double y){rect.x=x;rect.y=y;};
    SDL_Rect getRect(){return rect;};
    SDL_Texture* getTexture(){return prime_object;};
 

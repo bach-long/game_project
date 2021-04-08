@@ -12,7 +12,15 @@ public:
         v0=0;
         character=NULL;
     }
-
+    ~Character(){
+        SDL_DestroyTexture(character);
+    }
+    int get_x(){
+        return rect.x;
+    }
+    int get_y(){
+        return rect.y;
+    }
     bool LoadCharacter(string path,SDL_Renderer* screen){
     SDL_Texture* new_texture=NULL;
     SDL_Surface* loadedSur=IMG_Load(path.c_str());
@@ -39,18 +47,18 @@ public:
                v0=-10;
                rect.y+=v0+0.5*1.5;
                LoadCharacter("bird_up.png",gScreen);
-               cout<<"x: "<<rect.x<<" y: "<<rect.y<<endl;
+               //cout<<"x: "<<rect.x<<" y: "<<rect.y<<endl;
 
             }
     else if(e.type==SDL_MOUSEBUTTONUP||e.type==SDL_MOUSEMOTION){
              v0+=1.5;
              rect.y+=v0+1.5*0.5;
              LoadCharacter("bird_down.png",gScreen);
-             cout<<"x: "<<rect.x<<" y: "<<rect.y<<endl;
+             //cout<<"x: "<<rect.x<<" y: "<<rect.y<<endl;
             }
     SDL_Rect render_zone={rect.x,rect.y,rect.w,rect.h};
     SDL_RenderCopy(des,character,zone,&render_zone);
-    SDL_Delay((int)1000/FPS);
+
    }
 
 

@@ -9,14 +9,15 @@ class Pipe{
     double speed;//toc do
     SDL_Texture* Below_column;
     SDL_Texture* Above_column;
-
+    bool check_height;
    public:
     Pipe(){
+    check_height=false;
     below.y=rand()%(600-400+1)+400;
     below.w=90;
     below.h=800;
 
-    blank=rand()%(300-155+1)+155;
+    blank=rand()%(250-155+1)+155;
 
     above.y=below.y-800-blank;
     above.w=90;
@@ -24,7 +25,10 @@ class Pipe{
     Below_column=NULL;
     Above_column=NULL;
     }
-    ~Pipe(){};
+    ~Pipe(){
+      SDL_DestroyTexture(Below_column);
+      SDL_DestroyTexture(Above_column);
+    };
 
    void set_speed(double speed){
        this->speed=speed;
@@ -99,6 +103,18 @@ class Pipe{
 	void movement(){
 	    below.x+=speed;
 	    above.x+=speed;
+	    if(below.y<=300)
+            check_height=true;
+        if(below.y>=600)
+            check_height=false;
+        if(check_height){
+            below.y+=4;
+            above.y+=4;}
+        else{
+            below.y-=4;
+            above.y-=4;}
+
+
 	}
 
 	void render_above(SDL_Renderer* des, SDL_Rect* zone=NULL){
@@ -111,16 +127,16 @@ class Pipe{
     SDL_RenderCopy(des,Below_column,zone,&render_zone);
    }
 
-   /*bool lose(double& a,double& b){
+    bool lose(double& a,double& b){
         if(b+40>736)
             return true;
-        else if(a<=this->x&&a+58>=this->x&&(b<this->y2+800||b+40>this->y))
+        else if(a<=this->below.x&&a+58>=this->below.x&&(b<this->above.y+800||b+40>this->below.y))
             return true;
-        else if(a<=this->x+90&&a+58>=this->x+90&&(b<this->y2+800||b+40>this->y))
+        else if(a<=this->below.x+90&&a+58>=this->below.x+90&&(b<this->above.y+800||b+40>this->below.y))
             return true;
         else
             return false;
-    }*/
+    }
 
 
 

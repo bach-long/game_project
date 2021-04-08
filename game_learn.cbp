@@ -37,6 +37,7 @@
 		<Unit filename="Character.cpp" />
 		<Unit filename="Main_object.cpp" />
 		<Unit filename="Pipe.cpp" />
+		<Unit filename="Text_object.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
