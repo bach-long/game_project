@@ -10,18 +10,27 @@ class Pipe{
     SDL_Texture* Below_column;
     SDL_Texture* Above_column;
     bool check_height;
+    bool point;
+    double angle;
+    SDL_RendererFlip flip;
+
+
+
    public:
     Pipe(){
     check_height=false;
+    point=false;
     below.y=rand()%(600-400+1)+400;
     below.w=90;
     below.h=800;
 
-    blank=rand()%(250-155+1)+155;
+    blank=rand()%(300-155+1)+155;
 
     above.y=below.y-800-blank;
     above.w=90;
     above.h=800;
+    angle=0;
+    flip=SDL_FLIP_NONE;
     Below_column=NULL;
     Above_column=NULL;
     }
@@ -30,8 +39,16 @@ class Pipe{
       SDL_DestroyTexture(Above_column);
     };
 
+
+
    void set_speed(double speed){
        this->speed=speed;
+   }
+   void set_angle(double angle){
+       this->angle=angle;
+   }
+   void set_flip(SDL_RendererFlip flip){
+       this->flip=flip;
    }
    void set_above_x(double x){
        this->above.x=x;
@@ -45,6 +62,9 @@ class Pipe{
    SDL_Rect get_below(){
        return below;
    };
+
+
+
 
    bool LoadAbove(string path,SDL_Renderer* screen){
     SDL_Texture* new_texture=NULL;
@@ -66,6 +86,8 @@ class Pipe{
 
     return Above_column!=NULL;
     };
+
+
 
     bool LoadBelow(string path,SDL_Renderer* screen){
     SDL_Texture* new_texture=NULL;
@@ -89,6 +111,7 @@ class Pipe{
     };
 
 
+
    void reset(){
         if(below.x+90<0){
             this->below.x=1432.5;
@@ -96,48 +119,75 @@ class Pipe{
             this->below.y=rand()%(600-400+1)+400;
             this->blank=rand()%(300-155+1)+155;
             this->above.y=this->below.y-this->blank-800;
+            this->point=false;
 
 	}
+	    else
+            return;
    }
+
+
 
 	void movement(){
 	    below.x+=speed;
 	    above.x+=speed;
-	    if(below.y<=300)
+	}
+
+
+
+	void fluctuate(){
+        if(below.y<=300)
             check_height=true;
         if(below.y>=600)
             check_height=false;
         if(check_height){
-            below.y+=4;
-            above.y+=4;}
+            below.y+=3;
+            above.y+=3;}
         else{
-            below.y-=4;
-            above.y-=4;}
-
-
+            below.y-=3;
+            above.y-=3;}
 	}
+
+
 
 	void render_above(SDL_Renderer* des, SDL_Rect* zone=NULL){
     SDL_Rect render_zone={above.x,above.y,above.w,above.h};
-    SDL_RenderCopy(des,Above_column,zone,&render_zone);
+    SDL_RenderCopyEx(des,Above_column,zone,&render_zone,angle,NULL,flip);
    }
+
+
 
    void render_below(SDL_Renderer* des, SDL_Rect* zone=NULL){
     SDL_Rect render_zone={below.x,below.y,below.w,below.h};
-    SDL_RenderCopy(des,Below_column,zone,&render_zone);
+    SDL_RenderCopyEx(des,Below_column,zone,&render_zone,angle,NULL,flip);
    }
 
+
+
     bool lose(double& a,double& b){
-        if(b+40>736)
+        if(b+35>=736)
             return true;
-        else if(a<=this->below.x&&a+58>=this->below.x&&(b<this->above.y+800||b+40>this->below.y))
+        else if(a<=this->below.x&&a+48>=this->below.x&&(b<this->above.y+800||b+37>this->below.y))
             return true;
-        else if(a<=this->below.x+90&&a+58>=this->below.x+90&&(b<this->above.y+800||b+40>this->below.y))
+        else if(a<=this->below.x+90&&a+48>=this->below.x+90&&(b<this->above.y+800||b+37>this->below.y))
             return true;
         else
             return false;
     }
 
+
+
+    void check_point(double& a,int& Point){
+        if(a>this->below.x+90&&a<this->below.x+90+8){
+            this->point=true;
+        }
+        if(this->point==true){
+            Point++;
+            cout<<Point<<endl;
+            this->point=false;
+        }
+
+    }
 
 
 

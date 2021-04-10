@@ -30,8 +30,6 @@ bool Init(){
             return false;
         }
         return true;
-        if(TTF_Init()!=-1)
-        font_time=TTF_OpenFont("dlxfont.ttf",15);
     }
   }
 
@@ -73,7 +71,9 @@ bool Init(){
         col[i].LoadBelow("pipelong.png",gScreen);
         col[i].LoadAbove("pipelong_reversed.png",gScreen);
         col[i].set_speed(-7);
+        //col[i].set_angle(60);
        }
+        font_time=TTF_OpenFont("dlxfont.ttf",15);
         Text_object time_record;
         //time_record.SetColor(255,0,0);
      while(!quit){
@@ -104,14 +104,25 @@ bool Init(){
        for(int i=0;i<5;i++){
         col[i].render_above(gScreen);
         col[i].render_below(gScreen);
-        col[i].reset();
         col[i].movement();
+        if(Point>20){
+        col[i].set_speed(-8);
+        }
+        if(Point>30){
+        if(i%2!=0)
+        col[i].fluctuate();
+        }
+        if(Point>50){
+            col[i].fluctuate();
+        }
         double a=Bird.get_x();
         double b=Bird.get_y();
         if(col[i].lose(a,b))
-            SDL_Quit();
-
+            quit=true;
+        col[i].check_point(a,Point);
+        col[i].reset();
        }
+
        SDL_RenderPresent(gScreen);
        SDL_Delay((int)1000/FPS);
      }

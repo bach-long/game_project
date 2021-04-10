@@ -43,17 +43,17 @@ public:
     }
 
     void render_character(SDL_Renderer* des,SDL_Rect* zone,SDL_Event e){
-    if(e.type==SDL_MOUSEBUTTONDOWN){
+    if(e.type==SDL_MOUSEBUTTONDOWN&& e.key.repeat==0){
                v0=-10;
                rect.y+=v0+0.5*1.5;
-               LoadCharacter("bird_up.png",gScreen);
+               //LoadCharacter("bird_up.png",gScreen);
                //cout<<"x: "<<rect.x<<" y: "<<rect.y<<endl;
 
             }
     else if(e.type==SDL_MOUSEBUTTONUP||e.type==SDL_MOUSEMOTION){
              v0+=1.5;
              rect.y+=v0+1.5*0.5;
-             LoadCharacter("bird_down.png",gScreen);
+             //LoadCharacter("bird_down.png",gScreen);
              //cout<<"x: "<<rect.x<<" y: "<<rect.y<<endl;
             }
     SDL_Rect render_zone={rect.x,rect.y,rect.w,rect.h};

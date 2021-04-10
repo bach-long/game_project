@@ -10,9 +10,9 @@ private:
     int height;
 public:
     Text_object(){
-        text_col.r=255;
-        text_col.g=255;
-        text_col.b=255;
+        text_col.r=0;
+        text_col.g=0;
+        text_col.b=0;
         texture=NULL;
     }
     ~Text_object(){
@@ -36,7 +36,10 @@ public:
                 width= text_sur->w;
                 height= text_sur->h;
             }
-        SDL_FreeSurface(text_sur);
+            //if(text_sur==NULL){
+            //    cout<<"error with text";
+            //}
+        //SDL_FreeSurface(text_sur);
     return texture!=NULL;
     }
 
