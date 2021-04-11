@@ -10,6 +10,11 @@ Pipe col[5];//khai bao cac Pipe
 founder Start;//man hinh bat dau
 int Point=0;
 TTF_Font* font_time=NULL;
+Mix_Chunk* point_check=NULL;
+Mix_Chunk* die=NULL;
+Mix_Chunk* hit=NULL;
+Mix_Chunk* swoosh=NULL;
+Mix_Chunk* swing=NULL;
 
 using namespace std;
 
@@ -26,7 +31,7 @@ bool Init(){
         else{
         SDL_SetRenderDrawColor(gScreen,255,255,255,255);
         int IMG=IMG_INIT_PNG;
-        if(!IMG_Init(IMG))
+        if(SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0)
             return false;
         }
         return true;
@@ -43,7 +48,9 @@ bool Init(){
   }
 
   int main(int argc,char* argv[]){
-
+   if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
+     printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+   }
    if(!Init()||!LoadBackground()){
     cout<<"Can't initialize"<<endl;
    }
@@ -56,6 +63,11 @@ bool Init(){
         Start.setRect(254,267.5);
         Start.render(gScreen,NULL);
         SDL_RenderPresent(gScreen);
+        die=Mix_LoadWAV("die.wav");
+        hit=Mix_LoadWAV("hit.wav");
+        point_check = Mix_LoadWAV("point.wav");
+        swoosh=Mix_LoadWAV("swoosh.wav");
+        swing=Mix_LoadWAV("wing.wav");
         while(SDL_PollEvent(&e)!=0){
             if(e.type==SDL_MOUSEBUTTONDOWN){
             start_menu=true;
@@ -71,8 +83,13 @@ bool Init(){
         col[i].LoadBelow("pipelong.png",gScreen);
         col[i].LoadAbove("pipelong_reversed.png",gScreen);
         col[i].set_speed(-7);
+        col[i].set_point_check(point_check);
+        col[i].set_hit(hit);
+        col[i].set_die(die);
         //col[i].set_angle(60);
        }
+        Bird.set_swoosh(swoosh);
+        Bird.set_swing(swing);
         font_time=TTF_OpenFont("dlxfont.ttf",15);
         Text_object time_record;
         //time_record.SetColor(255,0,0);
@@ -113,12 +130,21 @@ bool Init(){
         col[i].fluctuate();
         }
         if(Point>50){
+        col[i].set_speed(-9);
+        if(i%2==0)
+        col[i].fluctuate();
+        }
+        if(Point>70){
             col[i].fluctuate();
         }
         double a=Bird.get_x();
         double b=Bird.get_y();
-        if(col[i].lose(a,b))
-            quit=true;
+        if(col[i].lose(a,b)){
+           for(int i=0;i<5;i++){
+               col[i].set_speed(0);
+               col[i].free_audio();
+           }
+        }
         col[i].check_point(a,Point);
         col[i].reset();
        }

@@ -7,13 +7,15 @@ class Pipe{
     SDL_Rect below;
     int blank;//khoang trong 2 cot
     double speed;//toc do
-    SDL_Texture* Below_column;
-    SDL_Texture* Above_column;
+    SDL_Texture* Below_column=NULL;
+    SDL_Texture* Above_column=NULL;
     bool check_height;
     bool point;
     double angle;
     SDL_RendererFlip flip;
-
+    Mix_Chunk* point_check=NULL;
+    Mix_Chunk* die=NULL;
+    Mix_Chunk* hit=NULL;
 
 
    public:
@@ -33,14 +35,32 @@ class Pipe{
     flip=SDL_FLIP_NONE;
     Below_column=NULL;
     Above_column=NULL;
+
+
     }
     ~Pipe(){
       SDL_DestroyTexture(Below_column);
       SDL_DestroyTexture(Above_column);
+      free_audio();
+      Mix_FreeChunk(point_check);
+      Mix_FreeChunk(hit);
+      Mix_FreeChunk(die);
     };
 
-
-
+   void free_audio(){
+      point_check=NULL;
+      hit=NULL;
+      die=NULL;
+   }
+   void set_point_check(Mix_Chunk* sample){
+       point_check=sample;
+   }
+   void set_hit(Mix_Chunk* sample){
+       hit=sample;
+   }
+   void set_die(Mix_Chunk* sample){
+       die=sample;
+   }
    void set_speed(double speed){
        this->speed=speed;
    }
@@ -120,7 +140,9 @@ class Pipe{
             this->blank=rand()%(300-155+1)+155;
             this->above.y=this->below.y-this->blank-800;
             this->point=false;
-
+            point_check = Mix_LoadWAV("point.wav");
+            die=Mix_LoadWAV("die.wav");
+            hit=Mix_LoadWAV("hit.wav");
 	}
 	    else
             return;
@@ -165,12 +187,21 @@ class Pipe{
 
 
     bool lose(double& a,double& b){
-        if(b+35>=736)
+        if(b+40>736){
+            //this->die=Mix_LoadWAV("die.wav");
+            Mix_PlayChannel(-1,die,0);
             return true;
-        else if(a<=this->below.x&&a+48>=this->below.x&&(b<this->above.y+800||b+37>this->below.y))
+        }
+        else if(a<=this->below.x&&a+58>=this->below.x&&(b<this->above.y+800||b+40>this->below.y)){
+            //this->hit=Mix_LoadWAV("hit.wav");
+            Mix_PlayChannel(-1,hit,0);
             return true;
-        else if(a<=this->below.x+90&&a+48>=this->below.x+90&&(b<this->above.y+800||b+37>this->below.y))
+        }
+        else if(a<=this->below.x+90&&a+58>=this->below.x+90&&(b<this->above.y+800||b+40>this->below.y)){
+            //this->hit=Mix_LoadWAV("hit.wav");
+            Mix_PlayChannel(-1,hit,0);
             return true;
+        }
         else
             return false;
     }
@@ -180,6 +211,10 @@ class Pipe{
     void check_point(double& a,int& Point){
         if(a>this->below.x+90&&a<this->below.x+90+8){
             this->point=true;
+            //this->point_check = Mix_LoadWAV("point.wav");
+            Mix_PlayChannel(-1,point_check,0);
+
+
         }
         if(this->point==true){
             Point++;
