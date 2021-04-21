@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1618164935 source:d:\game_learn\main.cpp
+1619028190 source:d:\game_learn\main.cpp
 	"CMNFUNCTION.h"
 	"Main_object.cpp"
 	"Character.cpp"
@@ -21,23 +21,23 @@
 1617463748 d:\game_learn\main_object.cpp
 	"CMNFUNCTION.h"
 
-1618164955 d:\game_learn\character.cpp
+1619000855 d:\game_learn\character.cpp
 	"CMNFUNCTION.h"
 
-1618164955 source:d:\game_learn\character.cpp
+1619000855 source:d:\game_learn\character.cpp
 	"CMNFUNCTION.h"
 
-1618164229 d:\game_learn\pipe.cpp
-	"CMNFUNCTION.h"
-	"Main_object.cpp"
-
-1618164229 source:d:\game_learn\pipe.cpp
+1619027807 d:\game_learn\pipe.cpp
 	"CMNFUNCTION.h"
 	"Main_object.cpp"
 
-1618074723 source:d:\game_learn\text_object.cpp
+1619027807 source:d:\game_learn\pipe.cpp
+	"CMNFUNCTION.h"
+	"Main_object.cpp"
+
+1618930006 source:d:\game_learn\text_object.cpp
 	"CMNFUNCTION.h"
 
-1618074723 d:\game_learn\text_object.cpp
+1618930006 d:\game_learn\text_object.cpp
 	"CMNFUNCTION.h"
 

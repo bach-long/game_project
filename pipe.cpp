@@ -13,20 +13,19 @@ class Pipe{
     bool point;
     double angle;
     SDL_RendererFlip flip;
-    Mix_Chunk* point_check=NULL;
-    Mix_Chunk* die=NULL;
-    Mix_Chunk* hit=NULL;
-
+    Mix_Chunk* point_check;
+    Mix_Chunk* die;
+    Mix_Chunk* hit;
 
    public:
     Pipe(){
     check_height=false;
     point=false;
-    below.y=rand()%(600-400+1)+400;
+    below.y=rand()%(550-300+1)+300;
     below.w=90;
     below.h=800;
 
-    blank=rand()%(300-155+1)+155;
+    blank=rand()%(280-155+1)+155;
 
     above.y=below.y-800-blank;
     above.w=90;
@@ -35,16 +34,22 @@ class Pipe{
     flip=SDL_FLIP_NONE;
     Below_column=NULL;
     Above_column=NULL;
-
-
+    Mix_Chunk* point_check=NULL;
+    Mix_Chunk* die=NULL;
+    Mix_Chunk* hit=NULL;
     }
     ~Pipe(){
       SDL_DestroyTexture(Below_column);
       SDL_DestroyTexture(Above_column);
+      Below_column=NULL;
+      Above_column=NULL;
       free_audio();
       Mix_FreeChunk(point_check);
       Mix_FreeChunk(hit);
       Mix_FreeChunk(die);
+      Mix_Chunk* point_check=NULL;
+      Mix_Chunk* die=NULL;
+      Mix_Chunk* hit=NULL;
     };
 
    void free_audio(){
@@ -136,12 +141,12 @@ class Pipe{
         if(below.x+90<0){
             this->below.x=1432.5;
             this->above.x=this->below.x;
-            this->below.y=rand()%(600-400+1)+400;
-            this->blank=rand()%(300-155+1)+155;
+            this->below.y=rand()%(550-300+1)+300;
+            this->blank=rand()%(280-155+1)+155;
             this->above.y=this->below.y-this->blank-800;
             this->point=false;
             point_check = Mix_LoadWAV("point.wav");
-            die=Mix_LoadWAV("die.wav");
+            die=Mix_LoadWAV("Oof -10%.wav");
             hit=Mix_LoadWAV("hit.wav");
 	}
 	    else
@@ -163,13 +168,18 @@ class Pipe{
         if(below.y>=600)
             check_height=false;
         if(check_height){
-            below.y+=3;
-            above.y+=3;}
+            below.y+=2;
+            above.y+=2;}
         else{
-            below.y-=3;
-            above.y-=3;}
+            below.y-=2;
+            above.y-=2;}
 	}
-
+    void fluctuate_slow(){
+        below.y+=3;
+        above.y+=3;
+        below.y-=3;
+        above.y-=3;
+    }
 
 
 	void render_above(SDL_Renderer* des, SDL_Rect* zone=NULL){
@@ -188,17 +198,18 @@ class Pipe{
 
     bool lose(double& a,double& b){
         if(b+40>736){
-            //this->die=Mix_LoadWAV("die.wav");
             Mix_PlayChannel(-1,die,0);
             return true;
         }
         else if(a<=this->below.x&&a+58>=this->below.x&&(b<this->above.y+800||b+40>this->below.y)){
-            //this->hit=Mix_LoadWAV("hit.wav");
             Mix_PlayChannel(-1,hit,0);
             return true;
         }
         else if(a<=this->below.x+90&&a+58>=this->below.x+90&&(b<this->above.y+800||b+40>this->below.y)){
-            //this->hit=Mix_LoadWAV("hit.wav");
+            Mix_PlayChannel(-1,hit,0);
+            return true;
+        }
+        else if(a>this->below.x&&a+58<this->below.x+90&&(b<this->above.y+800||b+40>this->below.y)){
             Mix_PlayChannel(-1,hit,0);
             return true;
         }
@@ -209,16 +220,14 @@ class Pipe{
 
 
     void check_point(double& a,int& Point){
-        if(a>this->below.x+90&&a<this->below.x+90+8){
+        if(a>this->below.x+90&&a<this->below.x+90-speed+1){
             this->point=true;
-            //this->point_check = Mix_LoadWAV("point.wav");
             Mix_PlayChannel(-1,point_check,0);
 
 
         }
         if(this->point==true){
             Point++;
-            cout<<Point<<endl;
             this->point=false;
         }
 

@@ -17,6 +17,7 @@ public:
     }
     ~Text_object(){
         SDL_DestroyTexture(texture);
+        texture=NULL;
     }
     void set_text_var(string str){
         this->text_var=str;
@@ -36,10 +37,6 @@ public:
                 width= text_sur->w;
                 height= text_sur->h;
             }
-            //if(text_sur==NULL){
-            //    cout<<"error with text";
-            //}
-        //SDL_FreeSurface(text_sur);
     return texture!=NULL;
     }
 
