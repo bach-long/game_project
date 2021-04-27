@@ -187,13 +187,13 @@ class Pipe{
 
 
 	void fluctuate(){
-	    if(Point>10&&point<=20){
+	    if(Point<=35){
             a=3;
-            b=3;
+            b=-3;
 	    }
-	    else if(Point>20&&Point<=30){
+	    else if(Point>35&&Point<=45){
             a=3;
-            b=speed;
+            b=speed-1;
 	    }
         if(below.y<=280)
             check_height=true;
@@ -203,19 +203,19 @@ class Pipe{
             below.y+=a;
             above.y+=a;}
         else{
-            below.y-=b;
-            above.y-=b;}
+            below.y+=b;
+            above.y+=b;}
 	}
 
     void collid(){
-       if(below.y<=above.y+800+135)
+       if(below.y<=above.y+800+130)
        skid=true;
        else if(below.y>above.y+800+400){
         skid=false;
        }
        if(skid){
-        below.y+=3;
-        above.y-=3;
+        below.y+=4;
+        above.y-=4;
        }
        else{
         below.y+=speed+1;
@@ -226,6 +226,7 @@ class Pipe{
 
 	void render_above(SDL_Renderer* des, SDL_Rect* zone=NULL){
     SDL_Rect render_zone={above.x,above.y,above.w,above.h};
+    //SDL_Point center={90/2,-1*above.y};
     SDL_RenderCopyEx(des,Above_column,zone,&render_zone,angle,NULL,flip);
    }
 
@@ -233,7 +234,8 @@ class Pipe{
 
    void render_below(SDL_Renderer* des, SDL_Rect* zone=NULL){
     SDL_Rect render_zone={below.x,below.y,below.w,below.h};
-    SDL_RenderCopyEx(des,Below_column,zone,&render_zone,angle,NULL,flip);
+    //SDL_Point center={90/2,800-(736-below.y)};
+    SDL_RenderCopyEx(des,Below_column,zone,&render_zone,angle*-1,NULL,flip);
    }
 
 
@@ -243,15 +245,15 @@ class Pipe{
             Mix_PlayChannel(-1,die,0);
             return true;
         }
-        else if(a<=this->below.x&&a+58>=this->below.x&&(b<this->above.y+800||b+40>this->below.y)){
+        else if(a<=below.x*cos(angle)&&a+58>=below.x*cos(angle)&&(b<(above.y+800)*cos(angle)||b+40>below.y/cos(angle))){
             Mix_PlayChannel(-1,hit,0);
             return true;
         }
-        else if(a<=this->below.x+90&&a+58>=this->below.x+90&&(b<this->above.y+800||b+40>this->below.y)){
+        else if(a<=(this->below.x+90)*cos(angle)&&a+58>=(below.x+90)*cos(angle)&&(b<(above.y+800)*cos(angle)||b+40>below.y/cos(angle))){
             Mix_PlayChannel(-1,hit,0);
             return true;
         }
-        else if(a>this->below.x&&a+58<this->below.x+90&&(b<this->above.y+800||b+40>this->below.y)){
+        else if(a>below.x*cos(angle)&&a+58<(below.x+90)*cos(angle)&&(b<(above.y+800)*cos(angle)||b+40>below.y/cos(angle))){
             Mix_PlayChannel(-1,hit,0);
             return true;
         }

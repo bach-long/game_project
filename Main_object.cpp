@@ -4,14 +4,16 @@ class founder{
    protected:
     SDL_Texture* prime_object;
     SDL_Rect rect;
-
+    int speed;
    public:
    founder(){
     prime_object=NULL;
     rect.x=0;
     rect.y=0;
     rect.w=0;
-    rect.h=0;};
+    rect.h=0;
+    speed=0;
+    };
    ~founder(){
        SDL_DestroyTexture(prime_object);
        prime_object=NULL;
@@ -20,10 +22,20 @@ class founder{
        rect.w=0;
        rect.h=0;
    };
-   void setRect(double x,double y){rect.x=x;rect.y=y;};
+   void setRect(int x,int y){rect.x=x;rect.y=y;};
    SDL_Rect getRect(){return rect;};
    SDL_Texture* getTexture(){return prime_object;};
-
+   void reset_scene(){
+       if(rect.x+rect.w<0){
+        rect.x=1307;
+       }
+   }
+   void move_scene(){
+         rect.x+=speed;
+   }
+   void speed_set(int x){
+       this->speed=x;
+   }
    bool LoadImg(string path,SDL_Renderer* screen){
     SDL_Texture* new_texture=NULL;
     SDL_Surface* loadedSur=IMG_Load(path.c_str());

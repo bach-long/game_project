@@ -8,6 +8,7 @@
 founder Background;//khai bao man hinh chinh
 Character Bird;//khai bao nhan vat
 Pipe col[5];//khai bao cac Pipe
+founder scene[2];
 Pipe* pointer=col;
 founder Start;//man hinh bat dau
 
@@ -76,7 +77,7 @@ bool Init(){
 
 
   bool LoadBackground(){
-       bool check=Background.LoadImg("background.png",gScreen);
+       bool check=Background.LoadImg("Lsg8aD3.png",gScreen);
        if(check==false)
         return false;
        else{
@@ -141,6 +142,12 @@ bool Init(){
         SDL_RenderPresent(gScreen);
        }
 
+       for(int i=0;i<2;i++){
+        scene[i].LoadImg("Lsg8aD3.png",gScreen);
+        scene[i].speed_set(-1);
+       }
+       scene[0].setRect(0,0);
+       scene[1].setRect(1308,0);
        for(int i=0;i<5;i++){
         col[i].set_above_x(1308+i*(304.5));
         col[i].set_below_x(1308+i*(304.5));
@@ -163,7 +170,11 @@ bool Init(){
        }
        SDL_RenderClear(gScreen);
        Bird.LoadCharacter("bird.png",gScreen);
-       Background.render(gScreen,NULL);
+       for(int i=0;i<2;i++){
+        scene[i].render(gScreen,NULL);
+        scene[i].move_scene();
+        scene[i].reset_scene();
+       }
        if(Stop_movement==false){
        Bird.vertical_move();
        }
@@ -210,8 +221,8 @@ bool Init(){
                 a=275;
             }
             else{
-                game_over.set_text_var(to_string(Point));
-                a=600;
+                game_over.set_text_var("Total:"+to_string(Point));
+                a=400;
             }
             suggest.set_text_var(" y: Try again    n: Exit ");
 
@@ -224,38 +235,40 @@ bool Init(){
             refresh(col,5);
             Bird.set_x((SCREEN_WIDTH-72)/6);
             Bird.set_y(100);
-            Bird.set_v0(-13);
+            Bird.set_v0(-15);
             Point=0;
             e.key.keysym.sym=SDLK_a;
             }
-            else if(e.key.keysym.sym==SDLK_n||e.type==SDL_QUIT||e.key.keysym.sym==SDLK_ESCAPE){
+            if(e.key.keysym.sym==SDLK_n||e.type==SDL_QUIT||e.key.keysym.sym==SDLK_ESCAPE){
             quit=true;
             }
         }
 
         else if(Stop_movement==false){
         col[i].movement();
-          if(Point>10&&Point<=15){
+          if(Point>15&&Point<=25){
         if(i%2!=0)
         col[i].fluctuate();
         }
-          if(Point>15&&Point<=20){
+        //thiet lap level
+          if(Point>25&&Point<=35){
         col[i].set_speed(-6);
         if(i%2==0)
         col[i].collid();
         }
-          if(Point>20&&Point<=30){
+          if(Point>35&&Point<=45){
+        if(i%2!=0)
         col[i].fluctuate();
         }
-
+        //
         col[i].check_point(a,Point);
         col[i].reset();
         }
        }
        time_record.RenderText(gScreen,30,20,NULL,0.0,NULL,SDL_FLIP_NONE);
        present_Point.RenderText(gScreen,30,55,NULL,0.0,NULL,SDL_FLIP_NONE);
-       time_var="Time ";
-       point="Point ";
+       time_var="Time:";
+       point="Point:";
        SDL_RenderPresent(gScreen);
        SDL_Delay((int)1000/FPS);
      }
