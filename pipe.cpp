@@ -3,6 +3,7 @@
 #include "Main_object.cpp"
 class Pipe{
    protected:
+    int a,b;
     SDL_Rect above;
     SDL_Rect below;
     int blank;//khoang trong 2 cot
@@ -10,6 +11,7 @@ class Pipe{
     SDL_Texture* Below_column=NULL;
     SDL_Texture* Above_column=NULL;
     bool check_height;
+    bool skid;
     bool point;
     double angle;
     SDL_RendererFlip flip;
@@ -20,6 +22,7 @@ class Pipe{
    public:
     Pipe(){
     check_height=false;
+    skid=true;
     point=false;
     below.y=rand()%(550-300+1)+300;
     below.w=90;
@@ -30,6 +33,9 @@ class Pipe{
     above.y=below.y-800-blank;
     above.w=90;
     above.h=800;
+
+    a=0;
+    b=0;
     angle=0;
     flip=SDL_FLIP_NONE;
     Below_column=NULL;
@@ -75,11 +81,29 @@ class Pipe{
    void set_flip(SDL_RendererFlip flip){
        this->flip=flip;
    }
+   void set_blank(double blank){
+       this->blank=blank;
+   }
    void set_above_x(double x){
        this->above.x=x;
    }
    void set_below_x(double x){
        this->below.x=x;
+   }
+   void set_below_y(double y){
+       this->below.y=y;
+   }
+   void set_above_y(double y){
+       this->above.y=y;
+   }
+   double get_blank(){
+       return blank;
+   }
+   double get_above_y(){
+       return above.y;
+   }
+   double get_below_y(){
+       return below.y;
    }
    SDL_Rect get_above(){
        return above;
@@ -163,22 +187,40 @@ class Pipe{
 
 
 	void fluctuate(){
-        if(below.y<=300)
+	    if(Point>10&&point<=20){
+            a=3;
+            b=3;
+	    }
+	    else if(Point>20&&Point<=30){
+            a=3;
+            b=speed;
+	    }
+        if(below.y<=280)
             check_height=true;
-        if(below.y>=600)
+        else if(below.y>=580)
             check_height=false;
         if(check_height){
-            below.y+=2;
-            above.y+=2;}
+            below.y+=a;
+            above.y+=a;}
         else{
-            below.y-=2;
-            above.y-=2;}
+            below.y-=b;
+            above.y-=b;}
 	}
-    void fluctuate_slow(){
+
+    void collid(){
+       if(below.y<=above.y+800+135)
+       skid=true;
+       else if(below.y>above.y+800+400){
+        skid=false;
+       }
+       if(skid){
         below.y+=3;
-        above.y+=3;
-        below.y-=3;
         above.y-=3;
+       }
+       else{
+        below.y+=speed+1;
+        above.y-=speed+1;
+       }
     }
 
 

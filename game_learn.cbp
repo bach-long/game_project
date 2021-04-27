@@ -34,10 +34,12 @@
 		</Compiler>
 		<Unit filename="CMNFUNCTION.h" />
 		<Unit filename="Character.cpp" />
+		<Unit filename="File_interact.cpp" />
 		<Unit filename="Main_object.cpp" />
 		<Unit filename="Pipe.cpp" />
 		<Unit filename="Text_object.cpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="refresh_pipe.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

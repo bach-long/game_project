@@ -21,6 +21,14 @@ const int COLOR_KEY_R=0;
 const int COLOR_KEY_G=0xFF;
 const int COLOR_KEY_B=0xFF;
 
+static int Point=0;
 
+static TTF_Font* font=NULL;
+static TTF_Font* menu_end=NULL;
+static Mix_Chunk* point_check=NULL;
+static Mix_Chunk* die=NULL;
+static Mix_Chunk* hit=NULL;
+static Mix_Chunk* swoosh=NULL;
+static Mix_Chunk* swing=NULL;
 
 #endif // CMNFUNCTION_H_INCLUDED

@@ -3,20 +3,15 @@
 #include"Character.cpp"
 #include"Pipe.cpp"
 #include"Text_object.cpp"
-
+#include"File_interact.cpp"
+#include"refresh_pipe.cpp"
 founder Background;//khai bao man hinh chinh
 Character Bird;//khai bao nhan vat
 Pipe col[5];//khai bao cac Pipe
+Pipe* pointer=col;
 founder Start;//man hinh bat dau
-int Point=0;
-TTF_Font* font=NULL;
-TTF_Font* menu_end=NULL;
-Mix_Chunk* point_check=NULL;
-Mix_Chunk* die=NULL;
-Mix_Chunk* hit=NULL;
-Mix_Chunk* swoosh=NULL;
-Mix_Chunk* swing=NULL;
 
+int hightscore=get_high_score("Highest_scores.txt");
 using namespace std;
 
 
@@ -121,43 +116,37 @@ bool Init(){
 
        Bird.set_swoosh(swoosh);
        Bird.set_swing(swing);
-
+       Start.LoadImg("start.png",gScreen);
+       Start.setRect(254,150);
        instruct.set_text_var("Click anywhere to get started");
        exit.set_text_var("Esc to exit");
        instruct.LoadFromText(font,gScreen);
        exit.LoadFromText(font,gScreen);
-
        while(!start_menu){
         while(SDL_PollEvent(&e)!=0){
             if(e.type==SDL_MOUSEBUTTONDOWN){
             start_menu=true;
             }
             else if(e.key.keysym.sym==SDLK_ESCAPE||e.type==SDL_QUIT){
-            break;
+            Close();
+            return 0;
             }
         }
 
         Background.render(gScreen,NULL);
-        Start.LoadImg("start.png",gScreen);
-        Start.setRect(254,150);
-        Start.render(gScreen,NULL);
         instruct.RenderText(gScreen,218,400,NULL,0.0,NULL,SDL_FLIP_NONE);
         exit.RenderText(gScreen,450,460,NULL,0.0,NULL,SDL_FLIP_NONE);
+        Start.render(gScreen,NULL);
 
         SDL_RenderPresent(gScreen);
-        SDL_Delay(1000/FPS);
        }
-
-        if(start_menu==false){
-            Close();
-        }
 
        for(int i=0;i<5;i++){
         col[i].set_above_x(1308+i*(304.5));
         col[i].set_below_x(1308+i*(304.5));
         col[i].LoadBelow("pipelong.png",gScreen);
         col[i].LoadAbove("pipelong_reversed.png",gScreen);
-        col[i].set_speed(-6);
+        col[i].set_speed(-5);
         col[i].set_point_check(point_check);
         col[i].set_hit(hit);
         col[i].set_die(die);
@@ -214,27 +203,30 @@ bool Init(){
         }
 
         if(Stop_movement==true){
-            suggest.set_text_var(" y: try again    n: exit ");
-            game_over.set_text_var("GAMEOVER");
+            int a;
+            if(Point>hightscore){
+                save_high_score("Highest_scores.txt",Point);
+                game_over.set_text_var("NEW RECORD: "+to_string(Point));
+                a=275;
+            }
+            else{
+                game_over.set_text_var(to_string(Point));
+                a=600;
+            }
+            suggest.set_text_var(" y: Try again    n: Exit ");
+
             game_over.LoadFromText(menu_end,gScreen);
             suggest.LoadFromText(font,gScreen);
-            game_over.RenderText(gScreen,410,200,NULL,0.0,NULL,SDL_FLIP_NONE);
-            suggest.RenderText(gScreen,278,350,NULL,0.0,NULL,SDL_FLIP_NONE);
-
+            game_over.RenderText(gScreen,a,200,NULL,0.0,NULL,SDL_FLIP_NONE);
+            suggest.RenderText(gScreen,270,350,NULL,0.0,NULL,SDL_FLIP_NONE);
             if(e.key.keysym.sym==SDLK_y){
             Stop_movement=false;
-            for(int k=0;k<5;k++){
-        col[k].set_above_x(1308+k*(304.5));
-        col[k].set_below_x(1308+k*(304.5));
-        col[k].set_speed(-6);
-        col[k].set_point_check(point_check);
-        col[k].set_hit(hit);
-        col[k].set_die(die);
-       }
+            refresh(col,5);
             Bird.set_x((SCREEN_WIDTH-72)/6);
             Bird.set_y(100);
-            Bird.set_v0(-12);
+            Bird.set_v0(-13);
             Point=0;
+            e.key.keysym.sym=SDLK_a;
             }
             else if(e.key.keysym.sym==SDLK_n||e.type==SDL_QUIT||e.key.keysym.sym==SDLK_ESCAPE){
             quit=true;
@@ -243,16 +235,16 @@ bool Init(){
 
         else if(Stop_movement==false){
         col[i].movement();
-          if(Point>5){
-        col[i].set_speed(-7);
-        }
           if(Point>10&&Point<=15){
         if(i%2!=0)
         col[i].fluctuate();
         }
           if(Point>15&&Point<=20){
-        col[i].set_speed(-8);
+        col[i].set_speed(-6);
         if(i%2==0)
+        col[i].collid();
+        }
+          if(Point>20&&Point<=30){
         col[i].fluctuate();
         }
 

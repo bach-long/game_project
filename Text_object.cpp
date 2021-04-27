@@ -30,14 +30,13 @@ public:
     }
 
 
-    bool LoadFromText(TTF_Font* font, SDL_Renderer* screen){
+    void LoadFromText(TTF_Font* font, SDL_Renderer* screen){
         SDL_Surface* text_sur= TTF_RenderText_Solid(font,text_var.c_str(),text_col);
             if(text_sur!=NULL){
                 texture=SDL_CreateTextureFromSurface(screen,text_sur);
                 width= text_sur->w;
                 height= text_sur->h;
             }
-    return texture!=NULL;
     }
 
     void SetColor(Uint8 red,Uint8 green, Uint8 blue){
