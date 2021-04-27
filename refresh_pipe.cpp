@@ -9,8 +9,8 @@ static void refresh(Pipe* colm ,int n){
         colm[k].set_point_check(point_check);
         colm[k].set_hit(hit);
         colm[k].set_die(die);
-        colm[k].set_below_y(rand()%(550-300+1)+300);
-        colm[k].set_blank(rand()%(280-155+1)+155);
+        colm[k].set_below_y(rand()%(550-270+1)+270);
+        colm[k].set_blank(rand()%(280-150+1)+150);
         colm[k].set_above_y(colm[k].get_below_y()-800-colm[k].get_blank());
        }
 }

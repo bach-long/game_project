@@ -24,11 +24,11 @@ class Pipe{
     check_height=false;
     skid=true;
     point=false;
-    below.y=rand()%(550-300+1)+300;
+    below.y=rand()%(550-270+1)+270;
     below.w=90;
     below.h=800;
 
-    blank=rand()%(280-155+1)+155;
+    blank=rand()%(280-150+1)+150;
 
     above.y=below.y-800-blank;
     above.w=90;
@@ -165,8 +165,8 @@ class Pipe{
         if(below.x+90<0){
             this->below.x=1432.5;
             this->above.x=this->below.x;
-            this->below.y=rand()%(550-300+1)+300;
-            this->blank=rand()%(280-155+1)+155;
+            this->below.y=rand()%(550-270+1)+270;
+            this->blank=rand()%(280-150+1)+150;
             this->above.y=this->below.y-this->blank-800;
             this->point=false;
             point_check = Mix_LoadWAV("point.wav");
@@ -197,7 +197,7 @@ class Pipe{
 	    }
         if(below.y<=280)
             check_height=true;
-        else if(below.y>=580)
+        else if(below.y>=570)
             check_height=false;
         if(check_height){
             below.y+=a;
@@ -208,18 +208,18 @@ class Pipe{
 	}
 
     void collid(){
-       if(below.y<=above.y+800+130)
+       if(below.y<=above.y+800+122)
        skid=true;
        else if(below.y>above.y+800+400){
         skid=false;
        }
        if(skid){
-        below.y+=4;
-        above.y-=4;
+        below.y+=3;
+        above.y-=3;
        }
        else{
-        below.y+=speed+1;
-        above.y-=speed+1;
+        below.y+=(speed-2);
+        above.y-=(speed-2);
        }
     }
 
